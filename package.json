@@ -8,7 +8,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "node . ./example/itsy-org",
+    "dev": "node dev.js ./example/itsy-org",
     "test": "node test"
   },
   "keywords": [],
