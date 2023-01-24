@@ -4,15 +4,18 @@ import * as lightning from 'lightningcss'
 import path from 'node:path'
 import glob from 'glob'
 
+const getCSS = token => token.css
 export default function (folderPath, options = {}) {
   const CWD = process.cwd()
   const realPath = path.join(CWD, folderPath)
   const inputs = glob.sync(`${realPath}/**/*.y?(a)ml`)
   if (!inputs.length) throw `Nothing found at ${realPath} with the suffix .yml or .yaml`
 
-  const tokens = inputs.map(processFile)
-  const darkTokens = tokens.filter(t => t.dark).flatMap(t => t.tokens)
-  const normalTokens = tokens.filter(t => !t.dark).flatMap(t => t.tokens)
+  const tokens = inputs.map(processFile).flat(Infinity)
+  const shakenTokens = tokens // TODO: treeshake
+
+  const darkTokens = shakenTokens.filter(t => t.isDark).map(getCSS)
+  const normalTokens = shakenTokens.filter(t => !t.isDark).map(getCSS)
   const result = rootWrap(normalTokens.join('\n')) + '\n' + wrapDarkMedia(rootWrap(darkTokens.join('\n')))
 
   const { code } = lightning.transform({

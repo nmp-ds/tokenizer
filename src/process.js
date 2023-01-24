@@ -8,22 +8,29 @@ export const processFile = (filePath) => {
 /**
  * @typedef TokenResult
  * @type {Object}
- * @property {boolean} dark
- * @property {Array.<string>} tokens
- * @property {Object.<string, string>} mergedTokens
+ * @property {boolean} isDark
+ * @property {boolean} isDef
+ * @property {boolean} isMap
+ * @property {string} css
+ * @property {[string, string]} token
  */
 
 /**
  * @arg {object} tokenTree
- * @returns {TokenResult}
+ * @returns {Array.<TokenResult>}
  */
 export const processTokens = (tokenTree) => {
   if (!tokenTree.token) throw "'token' is required for each document and can be set to either 'defs' or 'maps'"
   const isDark = !!tokenTree.dark
   delete tokenTree.dark
   const tokenType = tokenTree.token
+  const isDef = tokenType === 'defs'
+  const isMap = !isDef
   delete tokenTree.token
   const merged = mergeTree(tokenTree)
-  const tokens = Object.entries(merged).map(tokenType === 'defs' ? toCSSDef : toCSSMap)
-  return { dark: isDark, tokens, mergedTokens: merged }
+  const tokens = Object.entries(merged).map(token => ({
+    token, isDark, isDef, isMap,
+    css: tokenType === 'defs' ? toCSSDef(token) : toCSSMap(token)
+  }))
+  return tokens
 }
