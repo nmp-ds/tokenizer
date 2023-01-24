@@ -10,25 +10,25 @@ test('processTokens - throws', () => {
 })
 
 test('processTokens - defs', () => {
-  const result = processTokens({ ...testData.deepTree, token: 'defs' })
-  assert.not(result.dark)
-  assert.ok(result.tokens.includes('--x-foo: maybe;'))
-  assert.not(result.tokens.includes('--x-foo: var(--x-maybe);'))
+  const tokens = processTokens({ ...testData.deepTree, token: 'defs' })
+  assert.not(tokens.some(token => token.isDark))
+  assert.ok(tokens.some(({ css }) => css.includes('--x-foo: maybe;')))
+  assert.not(tokens.some(({ css }) => css.includes('--x-foo: var(--x-maybe);')))
 })
 
 test('processTokens - maps', () => {
-  const result = processTokens({ ...testData.deepTree, token: 'maps' })
-  assert.not(result.dark)
-  assert.not(result.tokens.includes('--x-foo: maybe;'))
-  assert.ok(result.tokens.includes('--x-foo: var(--x-maybe);'))
+  const tokens = processTokens({ ...testData.deepTree, token: 'maps' })
+  assert.not(tokens.some(token => token.isDark))
+  assert.not(tokens.some(({ css }) => css.includes('--x-foo: maybe;')))
+  assert.ok(tokens.some(({ css }) => css.includes('--x-foo: var(--x-maybe);')))
 })
 
 test('processTokens - dark', () => {
-  const darkResult = processTokens({ ...testData.deepTree, token: 'maps', dark: true })
-  assert.ok(darkResult.dark)
+  const darkTokens = processTokens({ ...testData.deepTree, token: 'maps', dark: true })
+  assert.ok(darkTokens.some(token => token.isDark))
 
-  const lightResult = processTokens({ ...testData.deepTree, token: 'maps' })
-  assert.not(lightResult.dark)
+  const lightTokens = processTokens({ ...testData.deepTree, token: 'maps' })
+  assert.not(lightTokens.some(token => token.isDark))
 })
 
 test.run()
