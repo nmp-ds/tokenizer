@@ -30,7 +30,7 @@ export const processTokens = (tokenTree) => {
   const merged = mergeTree(tokenTree)
   const tokens = Object.entries(merged).map(token => ({
     token, isDark, isDef, isMap,
-    css: tokenType === 'defs' ? toCSSDef(token) : toCSSMap(token)
+    css: isDef ? toCSSDef(token) : toCSSMap(token)
   }))
   return tokens
 }
