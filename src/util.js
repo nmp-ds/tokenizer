@@ -3,6 +3,18 @@ import yaml from 'yaml'
 import slugify from './slugify.js'
 
 /**
+ * @arg {Array.<TokenResult>} tokens
+ * @arg {Array.<string>} requirements
+ */
+export const requireTokens = (tokens, requirements) => {
+  if (requirements?.length) {
+    for (const r of requirements) {
+      if (!tokens.some(t => t.token[0] === r)) throw `Missing required token: '${r}'`
+    }
+  }
+}
+
+/**
  * @arg {string} filePath
  * @returns {object}
  */

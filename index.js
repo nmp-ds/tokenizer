@@ -1,6 +1,6 @@
 import { processFile } from './src/process.js'
 import { treeshake } from './src/treeshake.js'
-import { wrapDarkMedia, rootWrap } from './src/util.js'
+import { wrapDarkMedia, rootWrap, requireTokens } from './src/util.js'
 import path from 'node:path'
 import glob from 'glob'
 
@@ -15,10 +15,11 @@ export default function (folderPath, options = {}) {
   const shakenTokens = options.treeshake
     ? treeshake(tokens)
     : tokens
-  if (options.requirements?.length) {
-    for (const r of options.requirements) {
-      if (!shakenTokens.some(t => t.token[0] === r)) throw `Missing required token: '${r}' - in ${realPath}`
-    }
+  try {
+    requireTokens(shakenTokens, options.requirements)
+  } catch (err) {
+    console.error(err, `in directory ${realPath}`)
+    process.exit(1)
   }
 
   const darkTokens = shakenTokens.filter(t => t.isDark).map(getCSS)
