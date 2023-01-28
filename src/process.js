@@ -29,7 +29,8 @@ export const processTokens = (tokenTree) => {
   delete tokenTree.token
   const merged = mergeTree(tokenTree)
   const tokens = Object.entries(merged).map(token => ({
-    token, isDark, isDef, isMap,
+    token: { name: token[0], value: token[1] },
+    isDark, isDef, isMap,
     css: isDef ? toCSSDef(token) : toCSSMap(token)
   }))
   return tokens

@@ -9,7 +9,7 @@ import slugify from './slugify.js'
 export const requireTokens = (tokens, requirements) => {
   if (requirements?.length) {
     for (const r of requirements) {
-      if (!tokens.some(t => t.token[0] === r)) throw `Missing required token: '${r}'`
+      if (!tokens.some(t => t.token.name === r)) throw `Missing required token: '${r}'`
     }
   }
 }
