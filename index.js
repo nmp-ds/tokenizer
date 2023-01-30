@@ -1,5 +1,6 @@
 import { processFile } from './src/process.js'
-import { wrapDarkMedia, rootWrap } from './src/util.js'
+import { treeshake } from './src/treeshake.js'
+import { wrapDarkMedia, rootWrap, requireTokens } from './src/util.js'
 import path from 'node:path'
 import glob from 'glob'
 
@@ -11,8 +12,15 @@ export default function (folderPath, options = {}) {
   if (!inputs.length) throw `Nothing found at ${realPath} with the suffix .yml or .yaml`
 
   const tokens = inputs.map(processFile).flat(Infinity)
-  const shakenTokens = tokens // TODO: treeshake
-  // TODO: check options.requirements
+  const shakenTokens = options.treeshake
+    ? treeshake(tokens)
+    : tokens
+  try {
+    requireTokens(shakenTokens, options.requirements)
+  } catch (err) {
+    console.error(err, `in directory ${realPath}`)
+    process.exit(1)
+  }
 
   const darkTokens = shakenTokens.filter(t => t.isDark).map(getCSS)
   const normalTokens = shakenTokens.filter(t => !t.isDark).map(getCSS)
