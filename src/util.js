@@ -48,8 +48,8 @@ export const mergeTree = (obj, _prefix = '', result = {}) => {
   return result
 }
 
-const tokenKey = k => `--x-${k}:`
-export const toCSSMap = ([k, v]) => `${tokenKey(k)} var(--x-${v});`
+const tokenKey = k => `--w-${k}:`
+export const toCSSMap = ([k, v]) => `${tokenKey(k)} var(--w-${v});`
 export const toCSSDef = ([k, v]) => `${tokenKey(k)} ${v};`
 export const wrapDarkMedia = v => `@media (prefers-color-scheme:dark) { ${v} }`
 export const rootWrap = v => `:root, :host { ${v} }`

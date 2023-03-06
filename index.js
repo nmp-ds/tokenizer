@@ -2,13 +2,13 @@ import { processFile } from './src/process.js'
 import { treeshake } from './src/treeshake.js'
 import { wrapDarkMedia, rootWrap, requireTokens } from './src/util.js'
 import path from 'node:path'
-import glob from 'glob'
+import { globSync } from 'glob'
 
 const getCSS = token => token.css
 export default function (folderPath, options = {}) {
   const CWD = process.cwd()
   const realPath = path.join(CWD, folderPath)
-  const inputs = glob.sync(`${realPath}/**/*.y?(a)ml`)
+  const inputs = globSync(`${realPath}/**/*.y?(a)ml`)
   if (!inputs.length) throw `Nothing found at ${realPath} with the suffix .yml or .yaml`
 
   const tokens = inputs.map(processFile).flat(Infinity)

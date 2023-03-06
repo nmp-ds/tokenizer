@@ -35,8 +35,8 @@ test('mergeTree underscore ignored', () => {
 })
 
 test('toCSS', () => {
-  assert.is(util.toCSSMap(['foo', 'bar']), '--x-foo: var(--x-bar);')
-  assert.is(util.toCSSDef(['foo', 'bar']), '--x-foo: bar;')
+  assert.is(util.toCSSMap(['foo', 'bar']), '--w-foo: var(--w-bar);')
+  assert.is(util.toCSSDef(['foo', 'bar']), '--w-foo: bar;')
 })
 
 test('read yaml', () => {
