@@ -70,11 +70,18 @@ const hexToRGB = (str) => {
 }
 
 export const toCSSMap = ([k, v], duplicateAsRgb) => {
-  let css = `${tokenKey(k)} var(--w-${v});`;
-  if (duplicateAsRgb) {
-    const rgbTokenKey = tokenKey(k.replace(/^(s-)?(color-)?(.*)/, '$1rgb-$3'));
-    const rgbTokenValue = `var(--w-${v.replace(/^(s-)?(color-)?(.*)/, '$1rgb-$3')});`;
-    css = css.concat(rgbTokenKey, rgbTokenValue);
+  let css = `${tokenKey(k)}`;
+  const alpha = v.match(/([^\/]+)\/(0|[1-9][0-9]?|100)$/);
+  if (alpha) {
+    const decimalAlpha = (parseFloat(alpha[2]) / 100).toString().replace(/^0\./, '.');
+    css += `rgba(var(--w-${alpha[1].replace(/^(s-)?(color-)?(.*)/, '$1rgb-$3')}),${decimalAlpha});`;
+  } else {
+    css += `var(--w-${v});`;
+    if (duplicateAsRgb) {
+      const rgbTokenKey = tokenKey(k.replace(/^(s-)?(color-)?(.*)/, '$1rgb-$3'));
+      const rgbTokenValue = `var(--w-${v.replace(/^(s-)?(color-)?(.*)/, '$1rgb-$3')});`;
+      css = css.concat(rgbTokenKey, rgbTokenValue);
+    }
   }
   return css;
 }
